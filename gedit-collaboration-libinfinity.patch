@@ -1,0 +1,50 @@
+--- gedit-collaboration-3.6.1/configure.ac.orig	2013-02-24 19:37:22.000000000 +0100
++++ gedit-collaboration-3.6.1/configure.ac	2015-05-13 18:53:32.278596386 +0200
+@@ -62,9 +62,9 @@
+ PKG_CHECK_MODULES(GEDIT, [
+ 	gedit >= $GEDIT_REQUIRED_VERSION,
+ 	gtk+-3.0 >= 3.3.15
+-	libinfinity-0.5 >= $INFINITY_REQUIRED_VERSION
+-	libinfgtk-0.5 >= $INFINITY_REQUIRED_VERSION
+-	libinftextgtk-0.5 >= $INFINITY_REQUIRED_VERSION
++	libinfinity-0.6 >= $INFINITY_REQUIRED_VERSION
++	libinfgtk3-0.6 >= $INFINITY_REQUIRED_VERSION
++	libinftextgtk3-0.6 >= $INFINITY_REQUIRED_VERSION
+ 	libxml-2.0
+ ])
+ 
+#--- gedit-collaboration-3.6.1/src/gedit-collaboration.c.orig	2012-09-12 08:23:03.000000000 +0200
+#+++ gedit-collaboration-3.6.1/src/gedit-collaboration.c	2015-05-13 21:26:05.548212260 +0200
+#@@ -40,13 +40,13 @@ gedit_collaboration_get_sv (GtkWidget *w
+#                             gdouble   *sat,
+#                             gdouble   *val)
+# {
+#-	GdkColor color;
+#-	GtkStyle *style;
+#+	GdkRGBA color;
+#+	GtkStyleContext *style;
+# 	gdouble r, g, b;
+# 	gdouble h;
+# 
+#-	style = gtk_widget_get_style (widget);
+#-	color = style->base[gtk_widget_get_state (widget)];
+#+	style = gtk_widget_get_style_context (widget);
+#+	gtk_style_context_get_color(style, gtk_widget_get_state_flags (widget), &color);
+# 
+# 	r = color.red / 65535.0;
+# 	g = color.green / 65535.0;
+--- gedit-collaboration-3.6.1/src/gedit-collaboration-manager.h.orig	2012-09-12 08:23:03.000000000 +0200
++++ gedit-collaboration-3.6.1/src/gedit-collaboration-manager.h	2015-05-13 21:15:50.988238050 +0200
+@@ -60,10 +60,10 @@ GeditCollaborationManager *gedit_collabo
+                                                             InfIo       *io);
+ 
+ InfcNotePlugin *gedit_collaboration_manager_get_note_plugin (GeditCollaborationManager *manager);
+-InfcNodeRequest *gedit_collaboration_manager_subscribe (GeditCollaborationManager *manager,
++InfRequest *gedit_collaboration_manager_subscribe (GeditCollaborationManager *manager,
+                                                         GeditCollaborationUser    *user,
+                                                         InfcBrowser               *browser,
+-                                                        const InfcBrowserIter     *iter);
++                                                        const InfRequestResult    *iter);
+ 
+ void gedit_collaboration_manager_clear_colors (GeditCollaborationManager *manager,
+                                                GeditTab                  *tab);
